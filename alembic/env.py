@@ -27,8 +27,13 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 target_metadata = Base.metadata
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/ai_qgen")
-config.set_main_option("sqlalchemy.url", DATABASE_URL)
+# DATABASE_URL = os.getenv("SUPABASE_DATABASE_URL", "postgresql://postgres:postgres@localhost:5432/ai_qgen")
+# config.set_main_option("sqlalchemy.url", DATABASE_URL)
+
+DATABASE_URL = os.getenv("SUPABASE_DATABASE_URL")
+
+if not DATABASE_URL:
+    raise ValueError("SUPABASE_DATABASE_URL is not set. Check your .env file.")
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
