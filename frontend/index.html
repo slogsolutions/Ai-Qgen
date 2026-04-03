@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI_Qgen | AI Powered Exam Generation</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="background-accents">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+    </div>
+    
+    <nav class="navbar">
+        <div class="logo">AI<span>_Qgen</span></div>
+        <ul class="nav-links">
+            <li><a href="#dashboard">Dashboard</a></li>
+            <li><a href="#history">History</a></li>
+        </ul>
+    </nav>
+
+    <main class="container">
+        <header class="hero">
+            <h1>Bilingual AI Question Generator</h1>
+            <p>Generate high-quality exam papers in English and Hindi directly from your syllabus with anti-repetition technology.</p>
+        </header>
+
+        <section class="glass-panel main-form">
+            <h2>Add Subject Metadata</h2>
+            <form id="subjectForm">
+                <div class="input-group" style="display: flex; flex-direction: row; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Subject Code</label>
+                        <input type="text" id="subCode" placeholder="e.g. CS101" style="width: 100%;" required>
+                    </div>
+                    <div style="flex: 2;">
+                        <label>Subject Name</label>
+                        <input type="text" id="subName" placeholder="e.g. Data Structures" style="width: 100%;" required>
+                    </div>
+                </div>
+                <div class="input-group" style="display: flex; flex-direction: row; gap: 15px;">
+                    <div style="flex: 2;">
+                        <label>Branch Name</label>
+                        <input type="text" id="branchName" placeholder="e.g. Computer Science" style="width: 100%;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Branch Code</label>
+                        <input type="text" id="branchCode" placeholder="e.g. CSE" style="width: 100%;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Sem / Year</label>
+                        <input type="text" id="semYear" placeholder="e.g. 3rd Sem" style="width: 100%;" required>
+                    </div>
+                </div>
+                <div class="input-group" style="display: flex; flex-direction: row; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Exam Title</label>
+                        <input type="text" id="examTitle" placeholder="e.g. Mid Term" style="width: 100%;" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Exam Year</label>
+                        <input type="text" id="examYear" placeholder="e.g. 2026" style="width: 100%;" required>
+                    </div>
+                </div>
+                <button type="submit" class="btn secondary-btn">Register Subject</button>
+            </form>
+            <div id="subjectStatus" class="status-msg"></div>
+        </section>
+
+        <section class="glass-panel main-form">
+            <h2>Generate New Question Bank</h2>
+            <form id="genForm">
+                <div class="input-group">
+                    <label>Select Subject</label>
+                    <select id="subjectId" required>
+                        <option value="">Loading subjects...</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Upload Syllabus (PDF)</label>
+                    <input type="file" id="syllabusPdf" accept=".pdf" required>
+                </div>
+                <div class="input-group" style="display: flex; gap: 15px;">
+                    <div style="flex: 1;">
+                        <label>Number of Questions</label>
+                        <input type="number" id="numQs" value="30" min="1" max="300" required>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>Question Type</label>
+                        <select id="qType">
+                            <option value="Mixed">Mixed (All Types)</option>
+                            <option value="MCQ">MCQ (Multiple Choice)</option>
+                            <option value="FIB">Fill in the Blanks</option>
+                            <option value="T/F">True / False</option>
+                            <option value="SA">Short Answer</option>
+                            <option value="LA">Long Answer</option>
+                            <option value="CASE">Case-Based</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="input-group" style="display: flex; gap: 15px; margin-top: 10px;">
+                    <div style="flex: 1;">
+                        <label>AI Provider</label>
+                        <select id="aiProvider">
+                            <option value="groq">Groq (Cloud)</option>
+                            <option value="ollama">Ollama (Local)</option>
+                        </select>
+                    </div>
+                    <div style="flex: 1;">
+                        <label>AI Model</label>
+                        <select id="aiModel"></select>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn primary-btn" style="margin-top: 20px;">
+                    <span class="btn-text">Generate Questions (AI)</span>
+                    <span class="loader hidden"></span>
+                </button>
+            </form>
+            <div id="genStatus" class="status-msg"></div>
+        </section>
+
+        <section class="glass-panel paper-form">
+            <h2>Create Question Paper</h2>
+            <form id="paperForm">
+                <div class="input-group">
+                    <label>Subject</label>
+                    <select id="paperSubjectId" required></select>
+                </div>
+                <div class="input-group">
+                    <label>Number of Questions for Exam</label>
+                    <input type="number" id="paperNumQs" value="20" min="1" max="100" required>
+                </div>
+                <button type="submit" class="btn secondary-btn">Compile Exam File</button>
+            </form>
+            <div id="paperStatus" class="status-msg"></div>
+            <div id="downloadLinks" class="download-links hidden">
+                <a href="#" id="docxLink" class="download-card docx" download>Download DOCX Paper</a>
+                <a href="#" id="ansLink" class="download-card pdf" download>Download Answer Key</a>
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
