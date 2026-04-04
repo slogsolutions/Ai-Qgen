@@ -1,4 +1,5 @@
-const API_BASE = "http://localhost:8000/api/v1";
+// const API_BASE = "http://localhost:8000/api/v1";
+const API_BASE = "https://ai-qgen-1.onrender.com/api/v1";
 
 document.addEventListener("DOMContentLoaded", () => {
     loadSubjects();
@@ -12,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const res = await fetch(`${API_BASE}/subjects/`, {
                 method: "POST",
-                headers: {"Content-Type": "application/json"},
+                headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     code: document.getElementById("subCode").value,
                     name: document.getElementById("subName").value,
@@ -23,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     exam_year: document.getElementById("examYear").value
                 })
             });
-            if(res.ok) {
+            if (res.ok) {
                 status.style.color = "#4ade80";
                 status.textContent = "Subject Saved Successfully!";
                 subjectForm.reset();
@@ -31,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 throw new Error("Failed to save branch");
             }
-        } catch(err) {
+        } catch (err) {
             status.style.color = "#f87171";
             status.textContent = "Error: " + err.message;
         }
@@ -62,7 +63,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const loader = btn.querySelector(".loader");
         const btnText = btn.querySelector(".btn-text");
 
-        if(!subjectId) {
+        if (!subjectId) {
             alert("Subject required!");
             return;
         }
@@ -72,24 +73,24 @@ document.addEventListener("DOMContentLoaded", () => {
         formData.append("provider", provider);
         formData.append("model_name", modelName);
         formData.append("q_type", qType);
-        
+
         btnText.textContent = `Processing with ${modelName}...`;
         loader.classList.remove("hidden");
         status.textContent = "";
-        
+
         try {
             const res = await fetch(`${API_BASE}/generate/from-pdf/?subject_id=${subjectId}&num_questions=${numQs}`, {
                 method: "POST",
                 body: formData
             });
             const data = await res.json();
-            if(res.ok) {
+            if (res.ok) {
                 status.style.color = "#4ade80";
                 status.textContent = "Success: " + data.message;
             } else {
                 throw new Error(data.detail || "Server Error");
             }
-        } catch(err) {
+        } catch (err) {
             status.style.color = "#f87171";
             status.textContent = "Error: " + err.message;
         } finally {
@@ -103,7 +104,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         const subjectId = document.getElementById("paperSubjectId").value;
         const status = document.getElementById("paperStatus");
-        
+
         status.textContent = "Compiling Paper...";
         try {
             const numQs = document.getElementById("paperNumQs").value;
@@ -115,18 +116,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 body: JSON.stringify({
                     subject_id: parseInt(subjectId),
                     total_marks: 100,
-                    sections_config: [{"num_q": parseInt(numQs)}]
+                    sections_config: [{ "num_q": parseInt(numQs) }]
                 })
             });
             const data = await res.json();
-            if(res.ok) {
+            if (res.ok) {
                 status.textContent = "Paper successfully created!";
                 status.style.color = "#4ade80";
-                
+
                 // Show links
                 const downloadLinks = document.getElementById("downloadLinks");
                 downloadLinks.classList.remove("hidden");
-                
+
                 const baseURL = API_BASE.replace("/api/v1", "");
                 document.getElementById("docxLink").href = `${baseURL}/${data.paper_file}`;
                 document.getElementById("ansLink").href = `${baseURL}/${data.ans_key_file}`;
@@ -134,7 +135,7 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 throw new Error(data.detail);
             }
-        } catch(err) {
+        } catch (err) {
             status.style.color = "#f87171";
             status.textContent = "Error: " + err.message;
         }
@@ -150,14 +151,14 @@ async function loadSubjects() {
             return;
         }
         const subjects = await res.json();
-        
+
         const sel1 = document.getElementById("subjectId");
         const sel2 = document.getElementById("paperSubjectId");
-        
+
         sel1.innerHTML = '<option value="">Select a subject</option>';
         sel2.innerHTML = '<option value="">Select a subject</option>';
-        
-        if(subjects.length === 0) {
+
+        if (subjects.length === 0) {
             seedMockSubject();
         } else {
             subjects.forEach(sub => {
@@ -166,7 +167,7 @@ async function loadSubjects() {
                 sel2.innerHTML += opt;
             });
         }
-    } catch(err) {
+    } catch (err) {
         console.error("Could not load subjects, ensure backend is running.");
     }
 }
@@ -175,7 +176,7 @@ async function seedMockSubject() {
     try {
         await fetch(`${API_BASE}/subjects/`, {
             method: "POST",
-            headers: {"Content-Type": "application/json"},
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
                 code: "CS101",
                 name: "Computer Science",
@@ -198,7 +199,7 @@ async function seedMockSubject() {
             sel1.innerHTML += opt;
             sel2.innerHTML += opt;
         });
-    } catch(e) {}
+    } catch (e) { }
 }
 
 async function fetchModels(provider) {
@@ -214,7 +215,7 @@ async function fetchModels(provider) {
             opt.textContent = m.name;
             aiModel.appendChild(opt);
         });
-        
+
         // Auto-select first model if available
         if (models.length > 0 && !aiModel.value) {
             aiModel.value = models[0].id;
